@@ -1,115 +1,106 @@
-# ALSA Scarlett Control Panel (`alsa-scarlett-gui`) v1.0 beta
+# Vermilion
 
-<img src="img/alsa-scarlett-gui.png" align="right">
+A control panel for Focusrite Scarlett, Clarett and Vocaster USB audio
+interfaces on Linux: routing, mixer, levels and the settings of the
+interface, for the GNOME desktop.
 
-A Linux control panel for Focusrite Scarlett, Clarett, and Vocaster
-USB audio interfaces — the equivalent of Focusrite Control /
-Scarlett MixControl / Vocaster Hub on Linux.
+Vermilion is an AI-assisted port of
+[alsa-scarlett-gui](https://github.com/geoffreybennett/alsa-scarlett-gui)
+by Geoffrey D. Bennett to Python, GTK 4 and libadwaita.
 
-Configure routing, mixing, input/output levels, DSP processing,
-and firmware updates through a graphical interface.
+The name: vermilion is a bright red, the colour of these interfaces, so
+the name points to them without borrowing Focusrite’s product names.
 
-This is a beta release — better than 0.5 but not quite 1.0. The
-docs still need some updating.
+![Routing: sources on the left, sinks on the right, cables coloured by level](docs/screenshots/routing.png)
 
-## Supported Interfaces
+![Mixer: the mixes in columns, the inputs in rows, with mute, solo and pan](docs/screenshots/mixer.png)
 
-- Scarlett 1st Gen 6i6, 8i6, 18i6, 18i8, 18i20
-- Scarlett 2nd Gen 6i6, 18i8, 18i20
-- Scarlett 3rd Gen Solo, 2i2, 4i4, 8i6, 18i8, 18i20
-- Scarlett 4th Gen Solo, 2i2, 4i4, 16i16, 18i16, 18i20
-- Clarett 2Pre, 4Pre, 8Pre USB
-- Clarett+ 2Pre, 4Pre, 8Pre
-- Vocaster One and Vocaster Two
+## Installation
 
-![Demonstration](img/demo.gif)
+Vermilion needs Python >= 3.14, GTK 4 and libadwaita (Fedora 44 or
+newer), and PyGObject and pycairo from the distribution:
 
-## Features
+```sh
+sudo dnf install python3-gobject python3-cairo gtk4 libadwaita alsa-lib
+pipx install --system-site-packages vermilion
+```
 
-- **Drag-and-drop routing** — visual audio routing matrix with
-  real-time signal level glow
-- **Matrix mixer** — full mixer with per-crosspoint gain dials and
-  post-gain level metering
-- **DSP controls** — interactive parametric EQ and compressor with
-  draggable response graph (Vocaster)
-- **Configuration** — custom port names, stereo linking, port
-  visibility, and autogain targets
-- **Monitor groups** — Main/Alt output groups with per-output source
-  and trim (Gen 4 large)
-- **Presets** — quick save/load of named configurations, plus
-  file-based save/load
-- **Level meters** — real-time level display for all routing points
-- **Firmware updates** — integrated firmware upgrade support
+The kernel driver and firmware prerequisites are those of the original,
+see its [documentation](https://github.com/geoffreybennett/alsa-scarlett-gui/blob/master/docs/INSTALL.md).
+Vermilion doesn't update firmware.
 
-## Documentation
+The Scarlett 4th Gen 16i16, 18i16 and 18i20 are not supported yet: they
+use the Focusrite Control Protocol (FCP) driver, whose controls come
+from a user-space driver that Vermilion doesn't implement yet (their
+demos can be simulated, though).
 
-Refer to [INSTALL.md](docs/INSTALL.md) for prerequisites, how to
-build, install, and run.
+## Running from the source tree
 
-Refer to [USAGE.md](docs/USAGE.md) for general usage information and
-known issues.
+```sh
+uv venv --system-site-packages   # PyGObject comes from the system
+uv sync
+just blueprints                  # compile the user interface
+uv run vermilion
+```
 
-Information specific to various models:
+Simulated interfaces can be opened from `.state` files:
 
-- [Scarlett 1st Gen 6i6+](docs/iface-1st-gen.md)
+```sh
+uv run vermilion demo/"Scarlett Gen 4 18i20.state"
+```
 
-- [Scarlett 3rd Gen Solo and 2i2](docs/iface-small.md)
+`vermilion-config` loads a saved `.conf` configuration into a device
+from the command line (`uv run vermilion-config --help`).
 
-- [Scarlett 2nd/3rd Gen 4i4+, Clarett USB, and
-  Clarett+](docs/iface-large.md)
+Log messages go to the journal (or stderr); debug messages are shown
+with `G_MESSAGES_DEBUG=vermilion`.
 
-- [Scarlett 4th Gen Solo, 2i2, 4i4](docs/iface-4th-gen-small.md)
+## Files
 
-- [Scarlett 4th Gen 16i16, 18i16,
-  18i20](docs/iface-4th-gen-big.md)
+Following the [XDG Base Directory
+Specification](https://specifications.freedesktop.org/basedir-spec/latest/),
+per device (by serial number):
 
-- [Vocaster One and Two](docs/iface-vocaster.md)
+| File | Contents |
+|---|---|
+| `$XDG_STATE_HOME/vermilion/<serial>.conf` | port names, stereo links, mute/solo and the other controls the driver lacks; the window layout |
+| `$XDG_STATE_HOME/vermilion/<serial>-device.conf` | the controls of the interface as last seen, to undo the system’s ALSA state service (alsa-restore) |
+| `$XDG_CONFIG_HOME/vermilion/<serial>.conf` | preferences |
+| `$XDG_DATA_HOME/vermilion/presets/<serial>-<name>.conf` | presets |
 
-Additional documentation:
+The defaults are `~/.local/state`, `~/.config` and `~/.local/share`.
 
-- [Configuration Window](docs/configuration.md)
-- [Presets and Configuration Files](docs/presets.md)
-- [DSP Window](docs/dsp.md) (Vocaster)
-- [Digital I/O Availability](docs/digital-io-availability.md)
-- [FAQ](FAQ.md) — Troubleshooting and common questions
-- [Release Notes](RELEASE-NOTES.md) — What's new in each version
+## Development
 
-## Donations
+With [just](https://just.systems/):
 
-This software — the Linux kernel driver, this control panel, and the
-documentation — represents over a thousand hours of independent
-development: reverse-engineering Focusrite's USB protocols,
-developing and upstreaming the kernel driver, and building a
-complete replacement for Scarlett MixControl, Focusrite Control,
-Focusrite Control 2, and Vocaster Hub — often providing more
-functionality than Focusrite's own software.
+```sh
+just check    # all linters and the tests
+just lint     # ruff, mypy (strict), ty and reuse
+just test     # pytest (arguments are passed on)
+just fmt      # format the code
+just blueprints  # compile the Blueprint files
+just build    # sdist and wheel in dist/
+```
 
-If you've found it valuable, a donation is a nice way to say thanks:
+The user interface is described in Blueprint files
+(`src/vermilion/ui/blueprints/*.blp`). The application loads the
+GtkBuilder XML compiled from them (`*.ui`), so it doesn't need
+blueprint-compiler; the `.ui` files are not checked in but part of the
+package. After cloning and after changing a `.blp` file, run
+`just blueprints` (`just test` and `just build` do so first).
 
-- https://liberapay.com/gdb
-- https://paypal.me/gdbau
-- Zelle: g@b4.vu
+`tools/screenshot.py` renders every view of simulated interfaces to PNG
+files without opening windows on the desktop (with a private GTK
+Broadway display server, `gtk4-broadwayd`):
+
+```sh
+uv run tools/screenshot.py /tmp/shots demo/*.state
+```
 
 ## License
 
-Copyright 2022-2026 Geoffrey D. Bennett
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or (at
-your option) any later version.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-## Disclaimer Third Parties
-
-Focusrite, Scarlett, Clarett, and Vocaster are trademarks or
-registered trademarks of Focusrite Audio Engineering Limited in
-England, USA, and/or other countries. Use of these trademarks does not
-imply any affiliation or endorsement of this software.
+GPL-3.0-or-later, as the original. Copyright 2022-2026 Geoffrey D.
+Bennett (original C implementation), 2026 Stefan Tatschner (Python
+port). The project follows the [REUSE](https://reuse.software/)
+specification.

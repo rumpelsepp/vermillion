@@ -1,0 +1,147 @@
+/* Only what the default (Adwaita) style has no equivalent for. Colours
+ * are the named colours of the style, so light and dark both work.
+ */
+
+/* Routing and mixer: ports/labels related to the hovered one */
+.route-label {
+  border-radius: 6px;
+}
+
+.route-label-hover,
+.route-label:drop(active) {
+  background-color: alpha(var(--accent-bg-color), 0.3);
+  box-shadow: none;
+}
+
+.mixer-label-hover {
+  color: var(--accent-color);
+}
+
+/* Routing: the socket of a port (a jack: ring and hole), a pill for a
+ * stereo pair */
+.socket {
+  min-width: 7px;
+  min-height: 7px;
+  border: 3px solid alpha(currentColor, 0.35);
+  border-radius: 999px;
+  background-color: alpha(currentColor, 0.85);
+}
+
+/* no longer than a line of text, so that all rows are equally high */
+.socket.socket-stereo-h {
+  min-width: 15px;
+}
+
+.socket.socket-stereo-v {
+  min-height: 15px;
+}
+
+.routing-port {
+  min-height: 21px;
+}
+
+/* Routing: a group of sources or sinks */
+.routing-group {
+  padding: 6px 10px;
+}
+
+.socket.route-label-hover,
+.socket:drop(active) {
+  border-color: var(--accent-color);
+  background-color: alpha(currentColor, 0.85);
+}
+
+/* The routing area draws its own drop feedback (lines) */
+.routing:drop(active) {
+  box-shadow: none;
+}
+
+/* DSP: filter stage under the pointer in the response graph */
+.filter-stage-hover {
+  background-color: alpha(currentColor, 0.08);
+  border-radius: 6px;
+}
+
+/* Level meters: normal, loud (> -12 dB), close to clipping (> -3 dB) */
+levelbar block.low {
+  background-color: var(--success-color);
+}
+
+levelbar block.high {
+  background-color: var(--warning-color);
+}
+
+levelbar block.full {
+  background-color: var(--error-color);
+}
+
+/* Mixer: mute and solo of an input, in the colours of their meaning */
+button.circular.mute-button,
+button.circular.solo-button {
+  min-width: 24px;
+  min-height: 24px;
+  padding: 0;
+  font-weight: bold;
+}
+
+.mute-button:checked {
+  background-color: var(--error-bg-color);
+  color: var(--error-fg-color);
+}
+
+.solo-button:checked {
+  background-color: var(--warning-bg-color);
+  color: var(--warning-fg-color);
+}
+
+/* a fader that is off (at its minimum): greyed out, still movable */
+.gain-control.off scale,
+.gain-control.off .numeric {
+  opacity: 0.45;
+}
+
+/* a port hidden in the settings (its eye closed) */
+.hidden-port {
+  opacity: 0.45;
+}
+
+/* the mixer: lines between the mixes (columns) and the inputs (rows) */
+.mixer-cell,
+.mixer-column,
+.mixer-row,
+.mixer-section,
+.mixer-section-band {
+  border-color: alpha(currentColor, 0.12);
+  border-style: solid;
+  border-width: 0;
+}
+
+.mixer-cell {
+  padding: 10px 12px;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+}
+
+.mixer-column {
+  padding: 0 12px 6px 12px;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+}
+
+/* the lines between the rows start at the cells, not under the labels,
+   as the one under the mix labels does */
+.mixer-row {
+  padding: 0 12px;
+  border-right-width: 1px;
+}
+
+/* the heading row of a group of inputs: the expander with the labels, a
+ * band across the matrix; no vertical lines between the groups, the
+ * band's line is the top of the group's rows */
+.mixer-section {
+  padding: 12px 12px 6px 0;
+}
+
+.mixer-section-band {
+  border-bottom-width: 1px;
+}

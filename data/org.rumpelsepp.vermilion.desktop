@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Vermilion
+GenericName=Audio Interface Settings
+Comment=Settings, routing and mixer of Focusrite USB audio interfaces
+Icon=audio-card
+Exec=vermilion
+Categories=GTK;AudioVideo;Audio;Mixer;
+Keywords=focusrite;scarlett;clarett;vocaster;mixer;routing;

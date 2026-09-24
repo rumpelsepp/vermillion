@@ -1,0 +1,33 @@
+using Gtk 4.0;
+using Adw 1;
+
+// A view in the card window which can be moved to a separate window.
+template $DetachablePage: Adw.Bin {
+  Gtk.Stack inner {
+    Gtk.StackPage {
+      name: "content";
+
+      child: Adw.Bin content_bin {};
+    }
+
+    Gtk.StackPage {
+      name: "detached";
+
+      child: Adw.StatusPage {
+        icon-name: "window-new-symbolic";
+        title: _("Shown in a Separate Window");
+
+        child: Gtk.Button {
+          label: _("_Attach");
+          use-underline: true;
+          halign: center;
+          clicked => $on_attach();
+
+          styles [
+            "pill",
+          ]
+        };
+      };
+    }
+  }
+}

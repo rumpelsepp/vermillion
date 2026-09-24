@@ -1,0 +1,37 @@
+# SPDX-FileCopyrightText: 2026 Stefan Tatschner <stefan.tatschner@mailbox.org>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Licensing of the files that can't carry a header (reuse lint checks it).
+
+version = 1
+
+# taken over from the original C implementation
+[[annotations]]
+path = [
+  ".github/**",
+  "data/**",
+  "demo/**",
+]
+SPDX-FileCopyrightText = "2022-2026 Geoffrey D. Bennett <g@b4.vu>"
+SPDX-License-Identifier = "GPL-3.0-or-later"
+
+# the user interface of the port, following that of the original
+[[annotations]]
+path = ["src/vermilion/ui/blueprints/**", "src/vermilion/data/style.css"]
+SPDX-FileCopyrightText = [
+  "2022-2026 Geoffrey D. Bennett <g@b4.vu>",
+  "2026 Stefan Tatschner <stefan.tatschner@mailbox.org>",
+]
+SPDX-License-Identifier = "GPL-3.0-or-later"
+
+# project files of the port
+[[annotations]]
+path = [".gitignore", "README.md", "pyproject.toml", "src/vermilion/py.typed", "uv.lock"]
+SPDX-FileCopyrightText = "2026 Stefan Tatschner <stefan.tatschner@mailbox.org>"
+SPDX-License-Identifier = "GPL-3.0-or-later"
+
+# screenshots of the port
+[[annotations]]
+path = ["docs/screenshots/**"]
+SPDX-FileCopyrightText = "2026 Stefan Tatschner <stefan.tatschner@mailbox.org>"
+SPDX-License-Identifier = "GPL-3.0-or-later"

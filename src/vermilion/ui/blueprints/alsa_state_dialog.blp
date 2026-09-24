@@ -1,0 +1,62 @@
+using Gtk 4.0;
+using Adw 1;
+
+// ALSA state files (alsactl): saving and restoring the controls of the
+// interface, and simulating an interface from such a file.
+template $AlsaStateDialog: Adw.Dialog {
+  title: _("ALSA State Files");
+  content-width: 520;
+
+  child: Adw.ToolbarView {
+    [top]
+    Adw.HeaderBar {}
+
+    content: Adw.PreferencesPage {
+      description: _("ALSA state files (.state) hold the raw controls of a sound card, as written by “alsactl store”. Vermilion’s own configurations (.conf) are more complete; state files are for exchanging settings with other ALSA tools.");
+
+      Adw.PreferencesGroup {
+        title: _("Interface");
+
+        Adw.ActionRow store_row {
+          title: _("Save Controls");
+          subtitle: _("All controls of the interface, without port names, stereo links and DSP settings");
+
+          [suffix]
+          Gtk.Button {
+            label: _("Save…");
+            valign: center;
+            clicked => $_on_store();
+          }
+        }
+
+        Adw.ActionRow restore_row {
+          title: _("Restore Controls");
+          subtitle: _("Writes all controls of a state file to the interface");
+
+          [suffix]
+          Gtk.Button {
+            label: _("Open…");
+            valign: center;
+            clicked => $_on_restore();
+          }
+        }
+      }
+
+      Adw.PreferencesGroup {
+        title: _("Simulation");
+
+        Adw.ActionRow {
+          title: _("Simulate an Interface");
+          subtitle: _("Shows an interface from a state file without the device, e.g. to try Vermilion or to look at the setup from a bug report");
+
+          [suffix]
+          Gtk.Button {
+            label: _("Open…");
+            valign: center;
+            clicked => $_on_simulate();
+          }
+        }
+      }
+    };
+  };
+}

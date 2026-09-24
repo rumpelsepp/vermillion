@@ -1,0 +1,16 @@
+using Gtk 4.0;
+using Adw 1;
+
+// List of the supported interfaces; filled in by HardwareDialog.
+template $HardwareDialog: Adw.Dialog {
+  title: _("Supported Hardware");
+  content-width: 420;
+  content-height: 600;
+
+  child: Adw.ToolbarView {
+    [top]
+    Adw.HeaderBar {}
+
+    content: Adw.PreferencesPage page {};
+  };
+}

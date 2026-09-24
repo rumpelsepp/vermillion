@@ -1,0 +1,54 @@
+using Gtk 4.0;
+
+// Typing a value (double-click on the value of a fader or pan control),
+// like the rename popover of Nautilus; the texts are set by ValuePopover.
+template $ValuePopover: Gtk.Popover {
+  child: Gtk.Box {
+    orientation: vertical;
+    spacing: 6;
+    margin-top: 6;
+    margin-bottom: 6;
+    margin-start: 6;
+    margin-end: 6;
+
+    Gtk.Label heading {
+      xalign: 0;
+
+      styles [
+        "heading",
+      ]
+    }
+
+    Gtk.Box {
+      spacing: 6;
+
+      Gtk.Entry entry {
+        width-chars: 8;
+        input-purpose: number;
+        activate => $_on_set();
+      }
+
+      Gtk.Button {
+        label: _("_Set");
+        use-underline: true;
+        clicked => $_on_set();
+
+        styles [
+          "suggested-action",
+        ]
+      }
+    }
+
+    // how to type it; in the error colour for an invalid value
+    Gtk.Label hint {
+      wrap: true;
+      max-width-chars: 24;
+      xalign: 0;
+
+      styles [
+        "caption",
+        "dim-label",
+      ]
+    }
+  };
+}

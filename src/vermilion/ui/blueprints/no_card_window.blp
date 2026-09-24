@@ -1,0 +1,38 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $NoCardWindow: $MainWindow {
+  title: _("Vermilion");
+  default-width: 600;
+  default-height: 500;
+
+  content: Adw.ToolbarView {
+    [top]
+    Adw.HeaderBar {
+      [end]
+      Gtk.MenuButton menu_button {
+        icon-name: "open-menu-symbolic";
+        primary: true;
+        tooltip-text: _("Main Menu");
+      }
+    }
+
+    content: Adw.StatusPage {
+      icon-name: "audio-card-symbolic";
+      title: _("No Interface Found");
+      description: _("Connect a Focusrite Scarlett, Clarett or Vocaster USB interface, or open a saved state file to simulate one.");
+
+      child: Gtk.Button {
+        label: _("_Simulate an Interface…");
+        use-underline: true;
+        halign: center;
+        action-name: "win.sim";
+
+        styles [
+          "pill",
+          "suggested-action",
+        ]
+      };
+    };
+  };
+}

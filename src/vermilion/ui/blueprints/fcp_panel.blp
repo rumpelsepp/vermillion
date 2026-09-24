@@ -1,0 +1,12 @@
+using Gtk 4.0;
+using Adw 1;
+
+// Shown instead of the controls for an interface with the FCP driver,
+// which is not supported yet (see core/device/driver.py).
+template $FcpPanel: Adw.Bin {
+  child: Adw.StatusPage {
+    icon-name: "dialog-warning-symbolic";
+    title: _("Interface Not Supported Yet");
+    description: _("This interface uses the Focusrite Control Protocol (FCP) driver, which this application doesn’t support yet.\n\nUntil then, the <a href=\"https://github.com/geoffreybennett/alsa-scarlett-gui\">original ALSA Scarlett Control Panel</a> can control it, together with the user-space FCP driver of <a href=\"https://github.com/geoffreybennett/fcp-support\">fcp-support</a>.");
+  };
+}

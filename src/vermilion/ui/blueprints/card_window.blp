@@ -1,0 +1,144 @@
+using Gtk 4.0;
+using Adw 1;
+
+// The window of one interface: a sidebar with the views (controls,
+// routing, mixer, ...) and the selected view. Interfaces with only one
+// view (firmware too old, waiting for the driver, ...) show it without
+// the sidebar.
+template $CardWindow: $MainWindow {
+  default-width: 1200;
+  default-height: 800;
+  width-request: 360;
+  height-request: 294;
+
+  Adw.Breakpoint {
+    condition ("max-width: 700sp")
+
+    setters {
+      split_view.collapsed: true;
+    }
+  }
+
+  content: Gtk.Stack mode {
+    Gtk.StackPage {
+      name: "split";
+
+      child: Adw.NavigationSplitView split_view {
+        min-sidebar-width: 180;
+        max-sidebar-width: 260;
+
+        sidebar: Adw.NavigationPage sidebar_page {
+          child: Adw.ToolbarView {
+            [top]
+            Adw.HeaderBar {
+              // like an Adw.WindowTitle on two lines, so that model and
+              // serial number fit; long custom names are shortened in the
+              // middle
+              title-widget: Gtk.Box sidebar_title {
+                orientation: vertical;
+                valign: center;
+
+                Gtk.Label sidebar_title_label {
+                  ellipsize: middle;
+                  single-line-mode: true;
+                  styles ["title"]
+                }
+
+                Gtk.Label sidebar_subtitle_label {
+                  ellipsize: middle;
+                  single-line-mode: true;
+                  styles ["subtitle"]
+                }
+              };
+
+              [end]
+              Gtk.MenuButton menu_button {
+                icon-name: "open-menu-symbolic";
+                primary: true;
+                tooltip-text: _("Main Menu");
+              }
+            }
+
+            content: Gtk.ScrolledWindow {
+              hscrollbar-policy: never;
+
+              Gtk.StackSidebar {
+                stack: stack;
+                vexpand: true;
+              }
+            };
+          };
+        };
+
+        content: Adw.NavigationPage content_page {
+          child: Adw.ToolbarView {
+            [top]
+            Adw.HeaderBar {
+              [end]
+              Gtk.Button {
+                icon-name: "window-new-symbolic";
+                tooltip-text: _("Open in a Separate Window");
+                action-name: "win.detach";
+              }
+            }
+
+            [top]
+            Adw.Banner state_banner {
+              button-label: _("_Review…");
+              action-name: "win.review-state";
+            }
+
+            content: Gtk.Stack stack {
+              hhomogeneous: false;
+              vhomogeneous: false;
+              transition-type: crossfade;
+            };
+          };
+        };
+      };
+    }
+
+    Gtk.StackPage {
+      name: "single";
+
+      child: Adw.ToolbarView {
+        [top]
+        Adw.HeaderBar {
+          [end]
+          Gtk.MenuButton single_menu_button {
+            icon-name: "open-menu-symbolic";
+            primary: true;
+            tooltip-text: _("Main Menu");
+          }
+        }
+
+        [top]
+        Adw.Banner single_state_banner {
+          button-label: _("_Review…");
+          action-name: "win.review-state";
+        }
+
+        content: Adw.Bin single_bin {};
+      };
+    }
+
+    Gtk.StackPage {
+      name: "gone";
+
+      child: Adw.ToolbarView {
+        [top]
+        Adw.HeaderBar {}
+
+        content: Adw.StatusPage {
+          title: _("Waiting for the Interface");
+          description: _("The interface is restarting.");
+
+          child: Adw.Spinner {
+            width-request: 32;
+            height-request: 32;
+          };
+        };
+      };
+    }
+  };
+}

@@ -1,0 +1,81 @@
+using Gtk 4.0;
+
+// Routing window: groups of sources and sinks in a grid, with drawing
+// areas on top for the connection lines and the drag line.
+template $RoutingPanel: Gtk.Box {
+  Gtk.Overlay overlay {
+    margin-top: 12;
+    margin-bottom: 12;
+    margin-start: 12;
+    margin-end: 12;
+
+    styles [
+      "routing",
+    ]
+
+    child: Gtk.Grid routing_grid {
+      halign: center;
+      valign: start;
+      row-spacing: 10;
+      column-spacing: 10;
+
+      Gtk.MenuButton {
+        label: _("Presets");
+        halign: center;
+        valign: center;
+        menu-model: routing_presets;
+
+        layout {
+          column: 0;
+          row: 0;
+        }
+      }
+
+      Gtk.Label src_label {
+        justify: center;
+        label: "↑\nSources →";
+
+        layout {
+          column: 0;
+          row: 3;
+        }
+      }
+    };
+
+    [overlay]
+    Gtk.DrawingArea lines {
+      can-target: false;
+    }
+
+    [overlay]
+    Gtk.DrawingArea drag_line {
+      can-target: false;
+    }
+  }
+}
+
+menu routing_presets {
+  item {
+    label: _("Clear");
+    action: "routing.preset";
+    target: "clear";
+  }
+
+  item {
+    label: _("Direct");
+    action: "routing.preset";
+    target: "direct";
+  }
+
+  item {
+    label: _("Preamp");
+    action: "routing.preset";
+    target: "preamp";
+  }
+
+  item {
+    label: _("Stereo Out");
+    action: "routing.preset";
+    target: "stereo_out";
+  }
+}

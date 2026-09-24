@@ -1,0 +1,34 @@
+using Gtk 4.0;
+
+// A column of the I/O configuration: the eye to show or hide all and
+// the heading above a grid of ports.
+template $IoColumn: Gtk.Box {
+  orientation: vertical;
+  spacing: 10;
+
+  Gtk.Box {
+    orientation: horizontal;
+    spacing: 5;
+    halign: start;
+
+    Gtk.Button show_all {
+      valign: center;
+
+      styles [
+        "flat",
+        "circular",
+      ]
+    }
+
+    Gtk.Label heading {
+      use-markup: true;
+      halign: start;
+    }
+  }
+
+  Gtk.Grid grid {
+    row-spacing: 10;
+    column-spacing: 10;
+    margin-start: 16;
+  }
+}

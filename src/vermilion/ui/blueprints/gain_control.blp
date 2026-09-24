@@ -1,0 +1,99 @@
+using Gtk 4.0;
+
+// A gain/volume control: vertical fader with the value in dB below
+// (double-click it to type a level), an optional level meter and an
+// optional pan/balance control below.
+template $GainControl: Gtk.Box {
+  orientation: vertical;
+  spacing: 2;
+  halign: center;
+  valign: start;
+  vexpand: true;
+
+  styles [
+    "gain-control",
+  ]
+
+  // fader and level meter (side by side; one above the other when
+  // horizontal)
+  Gtk.Box fader {
+    orientation: horizontal;
+    spacing: 3;
+    halign: center;
+    vexpand: true;
+
+    Gtk.Scale scale {
+      orientation: vertical;
+      inverted: true;
+      draw-value: false;
+      vexpand: true;
+      height-request: 110;
+
+      adjustment: Gtk.Adjustment adjustment {};
+    }
+
+    Gtk.LevelBar level {
+      orientation: vertical;
+      inverted: true;
+      mode: continuous;
+      visible: false;
+      width-request: 5;
+    }
+  }
+
+  // the icon (a speaker by the level) only in the compact form, instead
+  // of the fader
+  Gtk.Box {
+    halign: center;
+    spacing: 4;
+
+    Gtk.Image value_icon {
+      icon-name: "audio-volume-muted-symbolic";
+      visible: false;
+    }
+
+    Gtk.Label value_label {
+      halign: center;
+      xalign: 0.5;
+      width-chars: 5;
+      max-width-chars: 5;
+      tooltip-text: _("Double-click to enter a level");
+
+      styles [
+        "numeric",
+      ]
+    }
+  }
+
+  // pan/balance of a stereo mixer cell, below the fader as in DAWs;
+  // double-click the value to type one
+  Gtk.Box pan_box {
+    orientation: vertical;
+    visible: false;
+
+    Gtk.Label pan_value {
+      halign: center;
+      tooltip-text: _("Double-click to enter a position");
+
+      styles [
+        "caption",
+        "numeric",
+      ]
+    }
+
+    Gtk.Scale pan_scale {
+      orientation: horizontal;
+      draw-value: false;
+      has-origin: false;
+      width-request: 64;
+      halign: fill;
+
+      adjustment: Gtk.Adjustment pan_adjustment {
+        lower: -1;
+        upper: 1;
+        step-increment: 0.05;
+        page-increment: 0.25;
+      };
+    }
+  }
+}

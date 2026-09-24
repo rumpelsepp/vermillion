@@ -1,0 +1,13 @@
+using Gtk 4.0;
+using Adw 1;
+
+// Shown instead of the controls when the firmware of the interface is
+// older than the driver requires. Updating the firmware is left to the
+// original alsa-scarlett-gui and the scarlett2/fcp-tool utilities.
+template $FirmwareRequiredPanel: Adw.Bin {
+  child: Adw.StatusPage status {
+    icon-name: "software-update-urgent-symbolic";
+    title: _("Firmware Update Required");
+    description: _("The firmware of this interface is too old for the driver. Please update it with the <a href=\"https://github.com/geoffreybennett/alsa-scarlett-gui\">original ALSA Scarlett Control Panel</a> or the <a href=\"https://github.com/geoffreybennett/scarlett2\">scarlett2</a> utility, then restart this application.");
+  };
+}

@@ -1,0 +1,38 @@
+using Gtk 4.0;
+
+// A group of routing sources or sinks ("Hardware Inputs", ...): the
+// heading outside a card, as on the controls page.
+template $RoutingGroup: Gtk.Box {
+  orientation: vertical;
+  spacing: 6;
+
+  Gtk.Label heading {
+    halign: start;
+
+    styles [
+      "heading",
+    ]
+  }
+
+  Gtk.Box card {
+    spacing: 6;
+
+    styles [
+      "card",
+      "routing-group",
+    ]
+
+    // row labels of a horizontal group (e.g. "Talkback")
+    Gtk.Box side_box {
+      orientation: vertical;
+      valign: end;
+      visible: false;
+    }
+
+    // one row (or column) per port, all equally high (or wide)
+    Gtk.Grid grid {
+      row-spacing: 2;
+      column-spacing: 6;
+    }
+  }
+}

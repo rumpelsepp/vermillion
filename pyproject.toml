@@ -1,0 +1,85 @@
+[project]
+name = "vermilion"
+version = "0.1.0"
+description = "Control panel for Focusrite Scarlett, Clarett and Vocaster USB audio interfaces on Linux"
+readme = "README.md"
+keywords = ["focusrite", "scarlett", "clarett", "vocaster", "alsa", "mixer", "gtk", "libadwaita"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: X11 Applications :: GTK",
+  "Intended Audience :: End Users/Desktop",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Multimedia :: Sound/Audio :: Mixers",
+]
+license = "GPL-3.0-or-later"
+license-files = ["LICENSES/*.txt"]
+authors = [{ name = "Stefan Tatschner", email = "stefan.tatschner@mailbox.org" }]
+requires-python = ">=3.14"
+dependencies = [
+  "PyGObject>=3.50",
+]
+
+[project.urls]
+Repository = "https://github.com/rumpelsepp/vermilion"
+Issues = "https://github.com/rumpelsepp/vermilion/issues"
+"Original C implementation" = "https://github.com/geoffreybennett/alsa-scarlett-gui"
+
+[project.scripts]
+vermilion = "vermilion.ui.app:main"
+vermilion-config = "vermilion.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.8,<0.13"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+  # compiles the Blueprint files to the .ui files (tools/blueprints.py)
+  "blueprint-compiler>=0.18",
+  "mypy>=1.15",
+  "pygobject-stubs>=2.13",
+  "pytest>=8",
+  "reuse>=6.2.0",
+  "ruff>=0.11",
+  "ty>=0.0.1a1",
+]
+
+[tool.uv.build-backend]
+# the application loads the .ui files compiled from them
+wheel-exclude = ["**/*.blp"]
+
+[tool.uv]
+# PyGObject and pycairo are taken from the distribution (python3-gobject,
+# python3-cairo); building them from source needs the C development
+# headers. Create the environment with
+# `uv venv --system-site-packages` so the system packages are visible.
+exclude-dependencies = ["pygobject", "pycairo"]
+
+# type stubs for GTK 4 (pygobject-stubs defaults to GTK 3)
+[tool.uv.config-settings-package]
+pygobject-stubs = { config = "Gtk4,Gdk4" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+# pathlib instead of os.path (PTH), absolute imports only (TID252)
+extend-select = ["PTH", "TID252"]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.mypy]
+strict = true
+files = ["src", "tests", "tools"]
+mypy_path = "src"
+
+# no type information (py.typed) in blueprint-compiler
+[[tool.mypy.overrides]]
+module = ["blueprintcompiler", "blueprintcompiler.*"]
+ignore_missing_imports = true

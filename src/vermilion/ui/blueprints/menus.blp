@@ -1,0 +1,41 @@
+using Gtk 4.0;
+
+// Primary menu of the header bars.
+menu primary_menu {
+  section {
+    item {
+      label: _("_Load Configuration…");
+      action: "win.load";
+      hidden-when: "action-missing";
+    }
+
+    item {
+      label: _("_Save Configuration…");
+      action: "win.save";
+      hidden-when: "action-missing";
+    }
+
+    item {
+      label: _("_ALSA State Files…");
+      action: "win.alsa-state";
+    }
+  }
+
+  section {
+    item {
+      label: _("_Device Information");
+      action: "win.device-info";
+      hidden-when: "action-missing";
+    }
+
+    item {
+      label: _("_Supported Hardware");
+      action: "app.hardware";
+    }
+
+    item {
+      label: _("_About Vermilion");
+      action: "win.about";
+    }
+  }
+}

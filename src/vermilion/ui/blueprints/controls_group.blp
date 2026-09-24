@@ -1,0 +1,25 @@
+using Gtk 4.0;
+
+// A titled group (e.g. of level meters): the heading above the content,
+// which draws its own lines as the mixer does; the heading folds it away.
+template $ControlsGroup: Gtk.Box {
+  orientation: vertical;
+  // as large as the content (see ControlsGroup)
+  valign: start;
+
+  Gtk.Expander expander {
+    expanded: true;
+
+    label-widget: Gtk.Label title {
+      halign: start;
+
+      styles [
+        "heading",
+      ]
+    };
+
+    child: Gtk.Box content {
+      margin-top: 6;
+    };
+  }
+}

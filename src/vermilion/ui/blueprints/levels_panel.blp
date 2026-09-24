@@ -1,0 +1,77 @@
+using Gtk 4.0;
+using Adw 1;
+
+// Levels window: one group of meters per kind of port (filled in by
+// LevelsPanel), with a help button explaining them.
+template $LevelsPanel: Gtk.Box {
+  orientation: vertical;
+
+  // unused outputs hidden, or shown
+  Adw.Banner banner {
+    button-clicked => $_on_toggle_unused();
+  }
+
+  Gtk.Box {
+    orientation: vertical;
+    spacing: 6;
+    margin-top: 6;
+    margin-bottom: 12;
+    margin-start: 12;
+    margin-end: 12;
+
+    // fold or unfold all groups; the help
+    Gtk.Box {
+      spacing: 6;
+
+      Gtk.Button {
+        label: _("Collapse All");
+        clicked => $_on_collapse_all();
+
+        styles [
+          "flat",
+        ]
+      }
+
+      Gtk.Button {
+        label: _("Expand All");
+        clicked => $_on_expand_all();
+
+        styles [
+          "flat",
+        ]
+      }
+
+      Gtk.MenuButton {
+        icon-name: "help-about-symbolic";
+        tooltip-text: _("About the Level Meters");
+        halign: end;
+        hexpand: true;
+
+        popover: Gtk.Popover {
+          child: Gtk.Label {
+            label: _(
+              "The meters show the signal level of each port, measured by the interface in dB relative to full scale: 0 dB is the loudest possible signal, where clipping starts.\n\nThe number above a meter is its peak level of the last second. Below it are the name of the port and, for an output, what feeds it.\n\nGreen is below −12 dB, yellow up to −3 dB, red is close to clipping.\n\nThe groups follow the signal: what comes in, the DSP and the mixer, what goes out. A click on the heading of a group folds it away."
+            );
+            wrap: true;
+            max-width-chars: 40;
+            xalign: 0;
+            margin-top: 6;
+            margin-bottom: 6;
+            margin-start: 6;
+            margin-end: 6;
+          };
+        };
+
+        styles [
+          "flat",
+          "circular",
+        ]
+      }
+    }
+
+    Gtk.Box groups {
+      orientation: vertical;
+      spacing: 18;
+    }
+  }
+}

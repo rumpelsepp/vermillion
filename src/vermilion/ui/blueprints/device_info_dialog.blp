@@ -1,0 +1,26 @@
+using Gtk 4.0;
+using Adw 1;
+
+// Everything known about an interface (or why none was found) and the
+// system; filled in by DeviceInfoDialog.
+template $DeviceInfoDialog: Adw.Dialog {
+  title: _("Device Information");
+  content-width: 640;
+  content-height: 720;
+
+  child: Adw.ToastOverlay toasts {
+    child: Adw.ToolbarView {
+      [top]
+      Adw.HeaderBar {
+        [start]
+        Gtk.Button {
+          icon-name: "edit-copy-symbolic";
+          tooltip-text: _("Copy as Text");
+          clicked => $_on_copy();
+        }
+      }
+
+      content: Adw.PreferencesPage page {};
+    };
+  };
+}

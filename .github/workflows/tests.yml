@@ -1,0 +1,49 @@
+# SPDX-FileCopyrightText: 2026 Stefan Tatschner <stefan.tatschner@mailbox.org>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# The tests with the Python versions of uv, including the free-threaded
+# builds, against GTK 4 and libadwaita of Debian.
+
+name: tests
+
+on:
+  push:
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.14", "3.14t", "3.15", "3.15t"]
+
+    # 3.15 is not released yet: its jobs only show how far it gets
+    continue-on-error: ${{ startsWith(matrix.python-version, '3.15') }}
+
+    runs-on: ubuntu-latest
+    container: debian:trixie
+
+    env:
+      # the Python of uv, not the one of Debian
+      UV_PYTHON_PREFERENCE: only-managed
+      # PyGObject and pycairo are excluded from the project's dependencies
+      # (they usually come from the distribution): built for this Python
+      UV_RUN_ARGS: --locked --with pygobject --with pycairo
+
+    steps:
+      # for a clone with git (reuse lint needs one)
+      - name: Install git
+        run: apt-get update -y && apt-get install -y --no-install-recommends ca-certificates git
+
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Run pytest
+        run: just test

@@ -1,10 +1,9 @@
-*.tar.gz
-*.o
-.deps
-.gdb_history
-/src/alsa-scarlett-gui
-/src/alsa-scarlett-gui-resources.c
-/src/tests/test-biquad
-/src/vu.b4.alsa-scarlett-gui.desktop
-/.flatpak-builder
-/flatpak-build
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+dist/
+.mypy_cache/
+.ruff_cache/
+# compiled from the Blueprint files (`just blueprints`)
+src/vermilion/ui/blueprints/*.ui

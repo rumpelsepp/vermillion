@@ -1,0 +1,42 @@
+# SPDX-FileCopyrightText: 2026 Stefan Tatschner <stefan.tatschner@mailbox.org>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# The linters of `just lint` (mypy needs pycairo for its type stubs).
+
+name: linters
+
+on:
+  push:
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  linters:
+    runs-on: ubuntu-latest
+    container: debian:trixie
+
+    env:
+      UV_PYTHON_PREFERENCE: only-managed
+      UV_RUN_ARGS: --locked --with pygobject --with pycairo
+
+    steps:
+      # for a clone with git (reuse lint needs one)
+      - name: Install git
+        run: apt-get update -y && apt-get install -y --no-install-recommends ca-certificates git
+
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup
+        with:
+          python-version: "3.14"
+
+      # ty only looks into the project's environment, not into the one of
+      # `uv run --with`: it gets the directory of PyGObject and pycairo
+      - name: Run the linters
+        run: |
+          site=$(uv run $UV_RUN_ARGS python -c \
+            'import cairo, os; print(os.path.dirname(os.path.dirname(cairo.__file__)))')
+          TY_ARGS="--extra-search-path $site" just lint

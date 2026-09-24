@@ -1,0 +1,21 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $SavePresetDialog: Adw.AlertDialog {
+  heading: _("Save as Preset");
+  default-response: "save";
+  close-response: "cancel";
+
+  responses [
+    cancel: _("_Cancel"),
+    save: _("_Save") suggested disabled,
+  ]
+
+  extra-child: Adw.PreferencesGroup {
+    Adw.EntryRow entry {
+      title: _("Preset Name");
+      activates-default: true;
+      changed => $on_changed();
+    }
+  };
+}

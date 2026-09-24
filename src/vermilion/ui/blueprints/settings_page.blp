@@ -1,0 +1,83 @@
+using Gtk 4.0;
+using Adw 1;
+
+// All settings of an interface, in sections. Sections which don't
+// apply to the interface stay hidden.
+template $SettingsPage: Adw.PreferencesPage {
+  Adw.PreferencesGroup device_group {
+    title: _("Device");
+    visible: false;
+  }
+
+  Adw.PreferencesGroup front_panel_group {
+    title: _("Front Panel");
+    visible: false;
+  }
+
+  Adw.PreferencesGroup autogain_group {
+    title: _("Autogain");
+    visible: false;
+  }
+
+  Adw.PreferencesGroup io_group {
+    title: _("Inputs and Outputs");
+    description: _("Click the eye to hide an input or output you don’t use from Routing, Mixer and Levels; the interface is not affected. Give a port a name of your own to tell it apart, and pair adjacent channels as stereo with the link buttons.");
+    visible: false;
+  }
+
+  Adw.PreferencesGroup monitor_group {
+    title: _("Monitor Groups");
+    description: _("Monitor groups let you organise your outputs into Main and Alt sets. Switch between them using the Alt button on your interface or the toggle on the controls page. The main volume knob controls the enabled group; use Trim for per-output level calibration.\n\nExamples: connect two sets of speakers for A/B reference mixing, create a surround setup with all speakers in one group, or switch quickly between DAW and direct monitoring by assigning the same output to both groups with different sources.");
+    visible: false;
+  }
+
+  Adw.PreferencesGroup startup_group {
+    title: _("Startup");
+    description: _("These settings are stored in the interface and applied when it is turned on.");
+    visible: false;
+  }
+
+  Adw.PreferencesGroup actions_group {
+    title: _("Device Actions");
+    visible: false;
+  }
+
+  Adw.PreferencesGroup display_group {
+    title: _("Application");
+    visible: false;
+
+    Adw.SwitchRow restore_row {
+      title: _("Restore Settings Automatically");
+      subtitle: _("When the settings of the interface changed while Vermilion wasn’t running, e.g. by the system’s ALSA state service, restore them without asking.");
+      visible: false;
+    }
+
+    Adw.SwitchRow solo_mutes_row {
+      title: _("Solo Mutes the Others");
+      subtitle: _("Soloing a mixer input or mix mutes the others; otherwise it dims them.");
+      visible: false;
+    }
+
+    Adw.SpinRow solo_dim_row {
+      title: _("Solo Dims the Others By");
+      subtitle: _("In dB.");
+      visible: false;
+
+      adjustment: Adjustment {
+        lower: 1;
+        upper: 60;
+        step-increment: 1;
+        page-increment: 6;
+      };
+    }
+
+    Adw.SwitchRow labels_row {
+      title: _("Mixer Labels on All Sides");
+      subtitle: _("Also show the mixer input and output labels below and to the right of the mixer.");
+    }
+
+    Adw.ComboRow rate_row {
+      title: _("Level Meter Update Rate");
+    }
+  }
+}

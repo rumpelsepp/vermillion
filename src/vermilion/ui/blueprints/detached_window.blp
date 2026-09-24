@@ -1,0 +1,28 @@
+using Gtk 4.0;
+using Adw 1;
+
+// A page of the card window shown in its own window.
+template $DetachedWindow: Adw.Window {
+  Gtk.ShortcutController {
+    Gtk.Shortcut {
+      trigger: "Escape";
+      action: "action(window.close)";
+    }
+  }
+
+  content: Adw.ToolbarView {
+    [top]
+    Adw.HeaderBar {
+      title-widget: Adw.WindowTitle window_title {};
+
+      [start]
+      Gtk.Button {
+        icon-name: "view-restore-symbolic";
+        tooltip-text: _("Attach to the Main Window");
+        action-name: "window.close";
+      }
+    }
+
+    content: Adw.Bin content_bin {};
+  };
+}

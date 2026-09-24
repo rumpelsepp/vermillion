@@ -1,0 +1,28 @@
+# SPDX-FileCopyrightText: 2026 Stefan Tatschner <stefan.tatschner@mailbox.org>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: setup
+description: >
+  Installs what PyGObject and pycairo are built with, GTK 4 and
+  libadwaita (Debian), libmagic (for reuse), just, uv and a Python of uv
+inputs:
+  python-version:
+    description: The Python version (of uv) to install.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Install the Debian packages
+      shell: bash
+      run: |
+        apt-get update -y
+        apt-get install -y --no-install-recommends build-essential pkg-config \
+          libcairo2-dev libgirepository-2.0-dev gir1.2-girepository-3.0 \
+          gir1.2-gtk-4.0 gir1.2-adw-1 libasound2t64 libmagic1 just
+
+    - name: Install uv and Python ${{ inputs.python-version }}
+      uses: astral-sh/setup-uv@v7
+      with:
+        enable-cache: true
+        python-version: ${{ inputs.python-version }}

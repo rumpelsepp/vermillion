@@ -1,0 +1,16 @@
+using Gtk 4.0;
+using Adw 1;
+
+Adw.AboutDialog about {
+  application-name: _("Vermilion");
+  application-icon: "audio-card-symbolic";
+  comments: _("Control panel for the ALSA controls presented by the Linux kernel Focusrite USB drivers.\n\nPython port of the original C implementation.\n\nVermilion is a bright red, the colour of these interfaces.");
+  website: "https://github.com/geoffreybennett/alsa-scarlett-gui";
+  issue-url: "https://github.com/geoffreybennett/alsa-scarlett-gui/issues";
+  copyright: "© 2022-2025 Geoffrey D. Bennett (original C implementation)\n© 2026 Stefan Tatschner (Python port)";
+  license-type: gpl_3_0;
+  developers: [
+    "Geoffrey D. Bennett <g@b4.vu> (original C implementation)",
+    "Stefan Tatschner <stefan.tatschner@mailbox.org> (Python port)",
+  ];
+}

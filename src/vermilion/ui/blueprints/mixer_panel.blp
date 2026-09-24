@@ -1,0 +1,167 @@
+using Gtk 4.0;
+using Adw 1;
+
+// Mixer window: a matrix of gain controls, mixes (mixer outputs) across,
+// mixer inputs down. The mix and input labels stay in view while the
+// matrix scrolls (they are separate grids sharing its adjustments).
+template $MixerPanel: Gtk.Box {
+  orientation: vertical;
+
+  // unused inputs and outputs hidden, or shown
+  Adw.Banner banner {
+    button-clicked => $_on_toggle_unused();
+  }
+
+  // fold all rows to their values, or show everything
+  Gtk.Box {
+    spacing: 6;
+    margin-top: 6;
+    margin-start: 12;
+    margin-end: 12;
+
+    Gtk.Button {
+      label: _("Collapse All");
+      tooltip-text: _("Fold all rows to their values");
+      clicked => $_on_collapse_all();
+
+      styles [
+        "flat",
+      ]
+    }
+
+    Gtk.Button {
+      label: _("Expand All");
+      tooltip-text: _("Show all groups and rows in full");
+      clicked => $_on_expand_all();
+
+      styles [
+        "flat",
+      ]
+    }
+  }
+
+  Gtk.Overlay {
+    vexpand: true;
+
+    child: Gtk.Grid matrix {
+      margin-top: 6;
+      margin-start: 12;
+
+      Gtk.Label corner {
+        justify: center;
+        valign: end;
+
+        styles [
+          "dim-label",
+          "caption",
+        ]
+
+        layout {
+          column: 0;
+          row: 0;
+        }
+      }
+
+      // mixes; not higher than their labels (which expand in it), the
+      // matrix takes the space
+      Gtk.ScrolledWindow header_scroll {
+        hscrollbar-policy: external;
+        vscrollbar-policy: never;
+        vexpand: false;
+
+        child: Gtk.Viewport {
+          scroll-to-focus: false;
+
+          child: Gtk.Grid header_grid {
+            halign: start;
+            margin-end: 12;
+          };
+        };
+
+        layout {
+          column: 1;
+          row: 0;
+        }
+      }
+
+      // mixer inputs; as wide as their labels (see header_scroll)
+      Gtk.ScrolledWindow label_scroll {
+        hscrollbar-policy: never;
+        vscrollbar-policy: external;
+        hexpand: false;
+
+        child: Gtk.Viewport {
+          scroll-to-focus: false;
+
+          child: Gtk.Grid label_grid {
+            valign: start;
+            margin-bottom: 12;
+          };
+        };
+
+        layout {
+          column: 0;
+          row: 1;
+        }
+      }
+
+      Gtk.ScrolledWindow body_scroll {
+        hexpand: true;
+        vexpand: true;
+        propagate-natural-width: true;
+        propagate-natural-height: true;
+
+        child: Gtk.Viewport {
+          child: Gtk.Grid grid {
+            halign: start;
+            valign: start;
+            // no spacing: the lines between the rows and columns (style.css)
+            // go through
+            margin-end: 12;
+            margin-bottom: 12;
+          };
+        };
+
+        layout {
+          column: 1;
+          row: 1;
+        }
+      }
+    };
+
+    [overlay]
+    Adw.StatusPage empty {
+      icon-name: "view-conceal-symbolic";
+      title: _("Nothing Connected to the Mixer");
+      description: _("No mixer input has a source or no mixer output is used. Connect them in the Routing view, or show the unused inputs and outputs.");
+      visible: false;
+
+      child: Gtk.Button {
+        label: _("_Show All");
+        use-underline: true;
+        halign: center;
+        clicked => $_on_toggle_unused();
+
+        styles [
+          "pill",
+        ]
+      };
+
+      styles [
+        "background",
+      ]
+    }
+
+    [overlay]
+    Adw.StatusPage unavailable {
+      icon-name: "dialog-information-symbolic";
+      title: _("Mixer Unavailable");
+      description: _("The mixer is not available at the current sample rate.");
+      visible: false;
+
+      styles [
+        "background",
+      ]
+    }
+  }
+}
