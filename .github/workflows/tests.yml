@@ -35,10 +35,6 @@ jobs:
       UV_RUN_ARGS: --locked --with pygobject --with pycairo
 
     steps:
-      # for a clone with git (reuse lint needs one)
-      - name: Install git
-        run: apt-get update -y && apt-get install -y --no-install-recommends ca-certificates git
-
       - uses: actions/checkout@v7
 
       - uses: ./.github/actions/setup

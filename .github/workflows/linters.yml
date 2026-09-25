@@ -1,7 +1,8 @@
 # SPDX-FileCopyrightText: 2026 Stefan Tatschner <stefan.tatschner@mailbox.org>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-# The linters of `just lint` (mypy needs pycairo for its type stubs).
+# The linters of `just lint`: reuse on the runner, as in gallia; the
+# others need GTK (mypy also pycairo for its type stubs).
 
 name: linters
 
@@ -14,6 +15,17 @@ permissions:
   contents: read
 
 jobs:
+  reuse:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/setup-uv@v7
+
+      - name: Run reuse lint
+        run: uvx reuse lint
+
   linters:
     runs-on: ubuntu-latest
     container: debian:trixie
@@ -23,10 +35,6 @@ jobs:
       UV_RUN_ARGS: --locked --with pygobject --with pycairo
 
     steps:
-      # for a clone with git (reuse lint needs one)
-      - name: Install git
-        run: apt-get update -y && apt-get install -y --no-install-recommends ca-certificates git
-
       - uses: actions/checkout@v7
 
       - uses: ./.github/actions/setup
@@ -39,4 +47,4 @@ jobs:
         run: |
           site=$(uv run $UV_RUN_ARGS python -c \
             'import cairo, os; print(os.path.dirname(os.path.dirname(cairo.__file__)))')
-          TY_ARGS="--extra-search-path $site" just lint
+          TY_ARGS="--extra-search-path $site" just ruff mypy ty
